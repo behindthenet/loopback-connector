@@ -122,7 +122,7 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {or: [{name: 'John'}, {name: 'Mary'}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) OR (`NAME`=?)',
+      sql: 'WHERE  ( (`NAME`=?) OR (`NAME`=?) ) ',
       params: ['John', 'Mary'],
     });
   });
@@ -131,7 +131,7 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {vip: true}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
+      sql: 'WHERE  ( (`NAME`=?) AND (`VIP`=?) ) ',
       params: ['John', true],
     });
   });
@@ -212,24 +212,24 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR (`ADDRESS` IS NULL))',
+      sql: 'WHERE  ( (`NAME`=?) AND ( ( (`VIP`=?) OR (`ADDRESS` IS NULL) ) ) ) ',
       params: ['John', true],
     });
   });
 
   it('builds order by with one field', function() {
-    var orderBy = connector.buildOrderBy('customer', 'name');
-    expect(orderBy).to.eql('ORDER BY `NAME`');
+    var result = connector.buildOrderBy('customer', 'name');
+    expect(result.orderBy).to.eql('ORDER BY `NAME`');
   });
 
   it('builds order by with two fields', function() {
-    var orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
-    expect(orderBy).to.eql('ORDER BY `NAME`,`VIP`');
+    var result = connector.buildOrderBy('customer', ['name', 'vip']);
+    expect(result.orderBy).to.eql('ORDER BY `NAME`,`VIP`');
   });
 
   it('builds order by with two fields and dirs', function() {
-    var orderBy = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
-    expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
+    var result = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
+    expect(result.orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
   });
 
   it('builds fields for columns', function() {
@@ -298,12 +298,10 @@ describe('sql connector', function() {
 
   it('builds SELECT', function() {
     var sql = connector.buildSelect('customer',
-      {order: 'name', limit: 5, where: {name: 'John'}});
-    expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS` FROM `CUSTOMER`' +
-      ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
-      params: ['John'],
-    });
+      {order: 'name', limit: 5, where: {name: 'John'}});      
+    
+    var expectedSelect = /SELECT [A-Za-z]+[0-9]+.`NAME`,[A-Za-z]+[0-9]+.`VIP`,[A-Za-z]+[0-9]+.`ADDRESS` FROM `CUSTOMER` [A-Za-z]+[0-9]+  WHERE [A-Za-z]+[0-9]+.`NAME`=\$1 ORDER BY `NAME` LIMIT 5/
+    expect(sql.toJSON().sql).to.match(expectedSelect);
   });
 
   it('builds INSERT', function() {
