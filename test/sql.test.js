@@ -298,9 +298,9 @@ describe('sql connector', function() {
 
   it('builds SELECT', function() {
     var sql = connector.buildSelect('customer',
-      {order: 'name', limit: 5, where: {name: 'John'}});      
-    
-    var expectedSelect = /SELECT [A-Za-z]+[0-9]+.`NAME`,[A-Za-z]+[0-9]+.`VIP`,[A-Za-z]+[0-9]+.`ADDRESS` FROM `CUSTOMER` [A-Za-z]+[0-9]+  WHERE [A-Za-z]+[0-9]+.`NAME`=\$1 ORDER BY `NAME` LIMIT 5/
+      {order: 'name', limit: 5, where: {name: 'John'}});
+
+    var expectedSelect = /SELECT [A-Za-z]+[0-9]+.`NAME`,[A-Za-z]+[0-9]+.`VIP`,[A-Za-z]+[0-9]+.`ADDRESS` FROM `CUSTOMER` [A-Za-z]+[0-9]+  WHERE [A-Za-z]+[0-9]+.`NAME`=\$1 ORDER BY `NAME` LIMIT 5/;
     expect(sql.toJSON().sql).to.match(expectedSelect);
   });
 
