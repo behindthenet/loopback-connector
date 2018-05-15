@@ -1,7 +1,7 @@
 {
   "name": "loopback-connector",
-  "version": "4.2.0-joins-1",
-  "description": "Building blocks for LoopBack connectors - With MySQL joins",
+  "version": "4.2.0",
+  "description": "Building blocks for LoopBack connectors",
   "engines": {
     "node": ">=4"
   },
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jolivervidal/loopback-connector"
+    "url": "https://github.com/strongloop/loopback-connector"
   },
   "main": "index.js",
   "scripts": {
