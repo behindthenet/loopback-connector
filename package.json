@@ -1,5 +1,5 @@
 {
-  "name": "loopback-connector-mysql-with-joins",
+  "name": "loopback-connector",
   "version": "4.2.0-joins-1",
   "description": "Building blocks for LoopBack connectors - With MySQL joins",
   "engines": {
